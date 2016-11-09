@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <array>
+#include "Memory.hpp"
 
 class Timer
 {
@@ -46,6 +47,8 @@ class Timer
 	*/
 	public:
 		void						sleep(unsigned char ms);
+		bool						testCycles(uint8_t cycles);
+		void						doDividerRegister(uint8_t cycles);
 
 	private:
 		uint8_t						_getCycleOpcodeTotal(void);
@@ -59,6 +62,8 @@ class Timer
 		std::array<uint32_t, 4>		_arrayFrequency;
 		uint8_t						_cycles;
 		uint8_t						_cyclesTotal;
+		uint8_t						_divider;
+		Memory						&_memory;
 };
 
 #endif

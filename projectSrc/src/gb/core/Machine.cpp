@@ -19,16 +19,20 @@ Machine::Machine(void) : _memory(Memory::Instance()), _clock(Timer::Instance()),
 
 void Machine::step(void)
 {
+	
+	if (((this->_cpu.getIME() && !this->_cpu.getStepIME()) || (!this->_cpu.getIME() && this->_cpu.getStepIME()))
+			&& this->_memory.read_byte(REGISTER_IF) > 0x00)
+		this->_cpu.interrupt();
 	if (((this->_memory.read_byte(REGISTER_TAC) & 0x4) == 0x4))
 	{
-		if (this->_cpu.nbCycleNextOpCode() < this->_clock.getCycleAcc())
+		if (!this->_cpu.getHalt() && this->_clock.testCycles(this->_cpu.nbCycleNextOpCode()))
 			this->_clock.setCycleAcc(this->_cpu.executeNextOpcode());
-		else
+		else if (!this->_cpu.getStop())
 		{
+			this->_cpu.interrupt();
 			//this->_gpu.render();
 			this->_clock.sleep(this->_getFrequencyFrameTimeGpu());
 			this->_clock.reset();
-			this->_cpu.interrupt();
 		}
 	}
 }

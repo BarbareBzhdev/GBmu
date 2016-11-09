@@ -1,5 +1,6 @@
-#include "Cpu.hpp"
 #include <stdio.h>
+#include "Cpu.hpp"
+#include "utils.hpp"
 
 /*
  ** ################################################################
@@ -52,10 +53,10 @@ uint8_t	Cpu_z80::_getCycleOpcode(void)
 
 void Cpu_z80::_setDataOpcode(void)
 {
-	if (this->_opcodeInProgress.lengthData > 1)
+	if (this->_opcodeInProgress.lengthData > 1 || !this->_PCNext)
 	{
 		if (this->_opcodeInProgress.lengthData > 2)
-			this->_opcodeInProgress.data = this->_memory.read_byte(this->_cpuRegister.PC + LENGTH_ADDR);
+				this->_opcodeInProgress.data = this->_memory.read_byte(this->_cpuRegister.PC + LENGTH_ADDR);
 		else
 			this->_opcodeInProgress.data = this->_memory.read_word(this->_cpuRegister.PC + LENGTH_ADDR);
 	}
@@ -71,7 +72,7 @@ uint8_t Cpu_z80::_getLengthDataOpcode(void)
 	return this->_opcodeInProgress.lengthData;
 }
 
-void Cpu_z80::_nextPtr(void) {
+void Cpu_z80::_nextPC(void) {
 	this->_cpuRegister.PC = this->_cpuRegister.PC + this->_opcodeInProgress.lengthData;
 	this->_opcodeInProgress = this->_getOpcode(this->_memory.read_byte(this->_cpuRegister.PC));
 	this->_setDataOpcode();
@@ -89,7 +90,7 @@ uint8_t Cpu_z80::executeNextOpcode(void)
 	else
 		this->_opcodeInProgress.functionOpcode();
 	uint8_t cycle = this->_getCycleOpcode();
-	this->_nextPtr();
+	this->_nextPC();
 	return cycle;
 }
 
@@ -151,43 +152,74 @@ void Cpu_z80::init(void)
 	this->_setDataOpcode();
 
 	//TODO: Setup loop, i think this one is up when rom memory is plugged
-	this->_setHightBit(REGISTER_TAC, 2);
+	setHightBit(this->_memory, REGISTER_TAC, 2);
 }
 
 /*
  ** ################################################################
- ** METHOD Math
+ ** METHOD interrupt
  ** ################################################################
- */
+*/
 
-void Cpu_z80::_setLowBit(uint16_t addr, uint8_t bit)
+bool Cpu_z80::getIME(void)
 {
-	this->_memory.write_byte(addr, (uint8_t)((0x01 << bit) ^ this->_memory.read_byte(addr)));
+	return this->_IME;
 }
 
-void Cpu_z80::_setHightBit(uint16_t addr, uint8_t bit)
+void Cpu_z80::_setIME(bool state)
 {
-	this->_memory.write_byte(addr, (uint8_t)((0x01 << bit) | this->_memory.read_byte(addr)));
+	this->_IME = state;
+}
+
+bool Cpu_z80::getStepIME(void)
+{
+	return this->_stepIME;
+}
+
+bool Cpu_z80::getHalt(void)
+{
+	return this->_HALT;
+}
+
+void Cpu_z80::_setHalt(bool state)
+{
+	this->_HALT = state;
+}
+
+bool Cpu_z80::getStop(void)
+{
+	return this->_STOP;
+}
+
+void Cpu_z80::_setStop(bool state)
+{
+	this->_STOP = state;
 }
 
 void Cpu_z80::interrupt(void)
 {
 	std::cout << "interrupt cpu" << std::endl;
+	this->_stepIME = this->_IME;
 }
+
+void Cpu_z80::setPCNext(bool state)
+{
+	this->_PCNext = state;
+}
+
+/*
+ ** ################################################################
+ ** METHOD other
+ ** ################################################################
+*/
 
 std::array<uint32_t, 4> Cpu_z80::getArrayFrequency()
 {
 	return this->_arrayFrequency;
 }
 
-void Cpu_z80::_resetPtrAddr(void)
-{
-	this->_cpuRegister.PC = 0x100;
-}
-
 void Cpu_z80::_setOpcodeMap()
 {
-	std::cout << "salut" << std::endl;
 	_opcodeMap = {
 		(t_opcode){0x00, 0x00, 4 , 4 , 1, std::bind(&Cpu_z80::NOP, this),		"NOP",			0x0000},
 		(t_opcode){0x01, 0x00, 12, 12, 3, std::bind(&Cpu_z80::LD_BC_n, this),	"LD BC, nn",	0x0000},
