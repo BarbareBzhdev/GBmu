@@ -1,6 +1,7 @@
 #include "Timer.hpp"
 #include "Cpu.hpp"
 #include "registerAddr.hpp"
+#include "interrupt.hpp"
 
 /*
 ** ############################################################################
@@ -60,7 +61,11 @@ void	Timer::incTima(void)
 	uint8_t			tma = _memory->read_byte(REGISTER_TMA);
 
 	if (tima == 0xFF)
+	{
 		_memory->write_byte(REGISTER_TIMA, tma);
+		_memory->write_byte(REGISTER_IF, _memory->read_byte(REGISTER_IF) |
+				INTER_TOVERF);
+	}
 	else
 		_memory->write_byte(REGISTER_TIMA, tima + 1);
 }
