@@ -132,7 +132,7 @@ bool Cpu_z80::getIME(void)
 bool Cpu_z80::isInterrupt(void)
 {
 	uint8_t _IE = _memory->read_byte(REGISTER_IE);
-	return (this->_memory->read_byte(REGISTER_IF) & INTER_MASK & _IE);
+	return (getIME() && this->_memory->read_byte(REGISTER_IF) & INTER_MASK & _IE);
 }
 
 bool Cpu_z80::_getInterrupt(uint8_t interrupt)
@@ -277,12 +277,9 @@ void Cpu_z80::_resetInterrupt(void)
 
 void Cpu_z80::execInterrupt(void)
 {
-	if (!this->getIME()
-		&& !this->getHalt()
-		&& !this->getStop())
-		return ;
-	if (this->isInterrupt())
-		this->_setIME(true);
+	this->_setIME(false);
+	this->_setHalt(false);
+
 	uint8_t _IE = _memory->read_byte(REGISTER_IE);
 	// Get interrupt here
 	if ((this->_memory->read_byte(REGISTER_IF) & INTER_VBLANK) > 0x00
@@ -351,7 +348,9 @@ void Cpu_z80::execInterrupt(void)
 		this->_cpuRegister.PC = 0x60;
 		this->_loadPtr(this->_cpuRegister.PC);
 	}
-	this->_setHalt(false);
+	else {
+		this->_setIME(true);
+	}
 }
 
 void Cpu_z80::_resetPtrAddr(void)

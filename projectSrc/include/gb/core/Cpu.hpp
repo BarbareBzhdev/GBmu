@@ -661,7 +661,6 @@ class Cpu_z80
 	private:
 	unsigned int					_ptrAddr;
 	Memory							*_memory;
-	t_opcode						_opcodeInProgress;
 	bool							_stepState;
 	bool							_halt = false;
 	bool							_stop = false;
@@ -670,6 +669,7 @@ class Cpu_z80
 
 	public:
 	unsigned int					_addrLength;
+	t_opcode						_opcodeInProgress; // TODO: go private
 	t_register						_cpuRegister;
 
 };

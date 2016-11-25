@@ -16,4 +16,5 @@ const uint8_t	*Bios::load(htype hardware)
 		// GB BIOS
 		return &BootGB[0];
 	}
+	return &BootGB[0];
 }

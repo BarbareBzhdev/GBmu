@@ -62,7 +62,7 @@ class Memory {
 		void				write_word(uint16_t addr, uint16_t val, bool super = false);
 		int					loadRom(const char *file, htype hardware);
 		htype				getRomType(void);
-
+		void				setInBios(bool inBios);
 	private:
 		Rom					_rom;
 		Bios				_bios;
@@ -70,7 +70,7 @@ class Memory {
 		uint8_t				_m_vram[2][8192];
 		uint8_t				_m_oam[160];
 		uint8_t				_m_io[128];
-		uint8_t				_m_zp[127];
+		uint8_t				_m_zp[128];
 		bool				_inBios;
 		htype				_typeBios;
 		const uint8_t		*_codeBios;
