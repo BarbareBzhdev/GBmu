@@ -24,7 +24,7 @@ Gpu::~Gpu()
 #define TILE_H 8
 #define BYTE_SIZE 8 // byte size 0000 0000 ;)
 
-#define MAP_W 32 
+#define MAP_W 32
 #define MAP0_ADDR 0x9800 // 32*32 tile
 #define MAP1_ADDR 0x9C00 // 32*32 tile
 
@@ -67,7 +67,7 @@ unsigned int	Gpu::scanPixel(uint8_t line, unsigned int x)
 			tileMapAddr
 			+ ((((line + scy) / TILE_H) * MAP_W)
 				+ ((x + scx) % (MAP_W * TILE_W)) / TILE_W));
-	if (!gpuC.tile_set) tileId += 128; // -128 -> 127 
+	if (!gpuC.tile_set) tileId += 128; // -128 -> 127
 	unsigned int tileAddr = tileSetAddr + tileId * TILE_H * 2;
 
 	unsigned int sy = (line + scy) % TILE_H;
@@ -198,6 +198,7 @@ void	Gpu::init()
 void	Gpu::accClock(unsigned int clock)
 {
 	_clock += clock;
+	dprintf(1, "Lecture de la clock GPU : %u\n", _clock);
 }
 
 t_gpuMode	Gpu::readGpuMode()

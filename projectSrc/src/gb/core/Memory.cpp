@@ -172,6 +172,7 @@ void			Memory::write_byte(uint16_t addr, uint8_t val, bool super)
 					}
 					break;
 				case 0x0F00:
+					// Sound Channel 1
 					if (!super && addr == 0xFF00)
 					{
 						// P1
@@ -189,14 +190,14 @@ void			Memory::write_byte(uint16_t addr, uint8_t val, bool super)
 						if ((addr == 0xFF44 || addr == 0xFF45) && read_byte(0xFF40) & 0x80)
 						{
 							if (read_byte(0xFF44) == read_byte(0xFF45))
-								this->_m_io[0x41] |= 0x04;// Coincidence	
+								this->_m_io[0x41] |= 0x04;// Coincidence
 							else
 								this->_m_io[0x41] &= 0xfb;
 						}
 						else if (addr == 0xFF40 && (val & 0x80))
 						{
 							if (read_byte(0xFF44) == read_byte(0xFF45))
-								this->_m_io[0x41] |= 0x04;	
+								this->_m_io[0x41] |= 0x04;
 							else
 								this->_m_io[0x41] &= 0xfb;
 						}

@@ -50,9 +50,24 @@ t_opcode Cpu_z80::_getOpcode(uint8_t opcode)
 
 uint8_t	Cpu_z80::_getCycleOpcode(void)
 {
+	static bool isDF = false;
 	if (_cpuRegister.F & _opcodeInProgress.mask)
-		return _opcodeInProgress.cycleOpcodeNoFlag;
-	return _opcodeInProgress.cycleOpcodeFlag;
+	{
+		if (isDF == true || _cpuRegister.PC >= 0x28DF)
+		{
+			dprintf(1, "Cycle opcode: %.2X : %d\n", _opcodeInProgress.opcode,
+						_opcodeInProgress.cycleOpcodeNoFlag),
+				isDF = true;
+		}
+		return (_opcodeInProgress.cycleOpcodeNoFlag);
+	}
+	if (isDF == true || _cpuRegister.PC >= 0x28DF)
+	{
+		dprintf(1, "Cycle opcode: %.2X : %d\n", _opcodeInProgress.opcode,
+					_opcodeInProgress.cycleOpcodeNoFlag),
+			isDF = true;
+	}
+	return (_opcodeInProgress.cycleOpcodeFlag);
 }
 
 

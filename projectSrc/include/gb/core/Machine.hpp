@@ -6,6 +6,7 @@
 #include "Memory.hpp"
 #include "Timer.hpp"
 #include "htype.hpp"
+#include "Audio.hpp"
 
 class Machine
 {
@@ -14,6 +15,7 @@ class Machine
 		Timer			*_clock;
 		Cpu_z80			*_cpu;
 		Gpu				*_gpu;
+		Audio			*_audio;
 		static htype	_hardware;
 
 	public:

@@ -22,7 +22,6 @@ Machine::Machine(void) :
 	_cpu = new Cpu_z80(_memory);
 	_gpu = new Gpu(_memory);
 	_clock = new Timer(_memory);
-	_audio = new Audio(_memory);
 	this->_cpu->init();
 }
 
@@ -42,7 +41,17 @@ bool Machine::step(void)
 	if (_cyclesAcc >= (uint32_t)(_cyclesMax / 59.7))
 	{
 		_cyclesAcc -= (uint32_t)(_cyclesMax / 59.7);
+<<<<<<< Updated upstream
 		// usleep(16750);
+=======
+		usleep(16750);
+		this->_cpu->execInterrupt();
+	}
+	else
+	{
+		if (this->_cpu->getPCRegister() >= 0x100)
+			this->_cpu->execInterrupt();
+>>>>>>> Stashed changes
 	}
 
 	if (_cpu->_cpuRegister.PC == 0x0100) // load Rom
