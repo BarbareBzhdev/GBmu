@@ -1,6 +1,7 @@
 #ifndef _CPU_HPP
 # define _CPU_HPP
 
+#include <fstream>
 #include "Memory.hpp"
 #include "Rom.hpp"
 #include "register.hpp"
@@ -57,7 +58,7 @@ class Cpu_z80
 		void							setHoldIME(bool state);
 		bool							getIME(void);
 		bool							getHoldIME(void);
-		static uint32_t						getClockSpeed(void);
+		static uint32_t					getClockSpeed(void);
 		void							setSwitchSpeed(void);
 		bool							isGBCSpeed(void);
 
@@ -652,8 +653,16 @@ class Cpu_z80
 		void							setStop(bool state);
 
 	private:
-		void								_setHalt(bool state);
+		void							_setHalt(bool state);
 
+	/*
+	 ** ################################################################
+	 ** METHOD SAVE STATE
+	 ** ################################################################
+	 */
+	public:
+		void							saveState(std::fstream &out);
+		void							loadState(std::fstream &out);
 
 	/*
 	 ** ################################################################
@@ -661,7 +670,6 @@ class Cpu_z80
 	 ** ################################################################
 	 */
 	private:
-		unsigned int					_ptrAddr;
 		Memory							*_memory;
 		bool							_stepState;
 		bool							_halt = false;
@@ -669,8 +677,7 @@ class Cpu_z80
 		bool							_IME = true;
 		bool							_holdIME = true;
 		uint16_t						_spBeforeInterrupt = 0xFFFF;
-		public:
-		unsigned int					_addrLength;
+	public:
 		t_opcode						_opcodeInProgress; // TODO: go private
 		t_register						_cpuRegister;
 		bool							_isSpeed = false;

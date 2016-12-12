@@ -78,3 +78,33 @@ void Machine::setHardware(htype hardware)
 	_hardware = hardware;
 	reset();
 }
+
+void Machine::saveState(const char *file)
+{
+	std::fstream					save;
+
+	save.open(file, std::fstream::out | std::fstream::binary);
+	if (!save.is_open())
+	{
+		std::cerr << "Cannot save file " << file << std::endl;
+		return ;
+	}
+	_clock->saveState(save);
+	_gpu->saveState(save);
+	_cpu->saveState(save);
+	_memory->saveState(save);
+	save.write(reinterpret_cast<char*>(&_cyclesAcc), sizeof(_cyclesAcc));
+}
+
+void Machine::loadState(const char *file)
+{
+	std::cout << "On rentre dans loadState ..." << std::endl;
+	std::fstream					load;
+	load.open(file, std::ios::in | std::ios::ate | std::ios::binary);
+
+	_clock->loadState(load);
+	_gpu->loadState(load);
+	_cpu->loadState(load);
+	_memory->loadState(load);
+	load.write(reinterpret_cast<char*>(&_cyclesAcc), sizeof(_cyclesAcc));
+}

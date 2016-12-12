@@ -75,3 +75,15 @@ void	Timer::incDivider(void)
 	else
 		_memory->write_byte(REGISTER_DIV, div + 1, true);
 }
+
+void	Timer::saveState(std::fstream &out)
+{
+	out.write(reinterpret_cast<char*>(&_cyclesAcc), sizeof(_cyclesAcc));
+	out.write(reinterpret_cast<char*>(&_divider), sizeof(_divider));
+}
+
+void	Timer::loadState(std::fstream &out)
+{
+	out.read(reinterpret_cast<char*>(&_cyclesAcc), sizeof(_cyclesAcc));
+	out.read(reinterpret_cast<char*>(&_divider), sizeof(_divider));
+}

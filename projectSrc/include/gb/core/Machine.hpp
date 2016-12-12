@@ -27,6 +27,8 @@ class Machine
 		virtual void	run(void);
 		virtual	void	reset(void) = 0;
 		void			setHardware(htype hardware);
+		void			loadState(const char *file);
+		void			saveState(const char *file);
 
 		unsigned int	_cyclesMax;
 		unsigned int	_cyclesAcc;

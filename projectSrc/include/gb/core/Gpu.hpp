@@ -54,6 +54,8 @@ class Gpu
 		void	accClock(unsigned int clock);
 		void	scanActLine();
 		void	setLy(uint8_t line);
+		void	saveState(std::fstream &out);
+		void	loadState(std::fstream &out);
 
 		t_gpuMode	readGpuMode(void);
 		void		writeGpuMode(t_gpuMode mode);

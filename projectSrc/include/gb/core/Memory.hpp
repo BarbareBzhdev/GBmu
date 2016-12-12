@@ -2,6 +2,7 @@
 #define MEMORY_HPP
 
 #include <stdint.h>
+#include <fstream>
 #include "Rom.hpp"
 #include "Bios.hpp"
 #include "htype.hpp"
@@ -80,6 +81,8 @@ class Memory {
 		void				setAudio(Audio *audio);
 		char				*romTitle(void);
 		bool				romIsLoaded(void);
+		void				saveState(std::fstream &out);
+		void				loadState(std::fstream &out);
 
 		std::array<uint8_t, 2>	key {{0x0f, 0x0f}};
 	private:

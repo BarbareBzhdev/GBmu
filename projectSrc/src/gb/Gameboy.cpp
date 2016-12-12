@@ -31,6 +31,8 @@ Gameboy::Gameboy(const char *path) :
 	_willRun.store(false);
 
 	connect(_window, &OpenGLWindow::openRomSign, this, &Gameboy::openRomSlot);
+	connect(_window, &OpenGLWindow::openStateSign, this, &Gameboy::openStateSlot);
+	connect(_window, &OpenGLWindow::saveStateSign, this, &Gameboy::saveStateSlot);
 	connect(_window, &OpenGLWindow::gbDbSign, this, &Gameboy::gbDbSlot);
 	connect(_window, &OpenGLWindow::keyPressSign, this, &Gameboy::KeyPress);
 	connect(_window, &OpenGLWindow::keyReleaseSign, this, &Gameboy::KeyRelease);
@@ -170,6 +172,16 @@ void	Gameboy::openRomSlot(std::string path)
 	_romPath = path;
 	reset();
 	_stepMode.store(false);
+}
+
+void	Gameboy::openStateSlot(std::string path)
+{
+	loadState(path.c_str());
+}
+
+void	Gameboy::saveStateSlot(std::string path)
+{
+	saveState(path.c_str());
 }
 
 void	Gameboy::gbDbSlot()

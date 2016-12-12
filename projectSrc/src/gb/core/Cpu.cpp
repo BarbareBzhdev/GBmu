@@ -25,9 +25,6 @@ Cpu_z80::~Cpu_z80(void)
 {
 }
 
-uint16_t Cpu_z80::getPCRegister(void)
-{ return (this->_cpuRegister.PC); }
-
 uint32_t Cpu_z80::getClockSpeed(void)
 {
 	return CLOCKSPEED;
@@ -343,4 +340,30 @@ void Cpu_z80::execInterrupt(void)
 void Cpu_z80::_resetPtrAddr(void)
 {
 	this->_cpuRegister.PC = 0x100;
+}
+
+void Cpu_z80::saveState(std::fstream &out)
+{
+	out.write(reinterpret_cast<char*>(&_stepState), sizeof(_stepState));
+	out.write(reinterpret_cast<char*>(&_halt), sizeof(_halt));
+	out.write(reinterpret_cast<char*>(&_stop), sizeof(_stop));
+	out.write(reinterpret_cast<char*>(&_IME), sizeof(_IME));
+	out.write(reinterpret_cast<char*>(&_holdIME), sizeof(_holdIME));
+	out.write(reinterpret_cast<char*>(&_spBeforeInterrupt), sizeof(_spBeforeInterrupt));
+	out.write(reinterpret_cast<char*>(&_opcodeInProgress), sizeof(_opcodeInProgress));
+	out.write(reinterpret_cast<char*>(&_cpuRegister), sizeof(_cpuRegister));
+	out.write(reinterpret_cast<char*>(&_isSpeed), sizeof(_isSpeed));
+}
+
+void Cpu_z80::loadState(std::fstream &out)
+{
+	out.read(reinterpret_cast<char*>(&_stepState), sizeof(_stepState));
+	out.read(reinterpret_cast<char*>(&_halt), sizeof(_halt));
+	out.read(reinterpret_cast<char*>(&_stop), sizeof(_stop));
+	out.read(reinterpret_cast<char*>(&_IME), sizeof(_IME));
+	out.read(reinterpret_cast<char*>(&_holdIME), sizeof(_holdIME));
+	out.read(reinterpret_cast<char*>(&_spBeforeInterrupt), sizeof(_spBeforeInterrupt));
+	out.read(reinterpret_cast<char*>(&_opcodeInProgress), sizeof(_opcodeInProgress));
+	out.read(reinterpret_cast<char*>(&_cpuRegister), sizeof(_cpuRegister));
+	out.read(reinterpret_cast<char*>(&_isSpeed), sizeof(_isSpeed));
 }

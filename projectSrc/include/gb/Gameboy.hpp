@@ -54,6 +54,8 @@ class Gameboy : public Machine, public QWidget
 		void			KeyRelease(int key);
 	protected slots:
 		void	openRomSlot(std::string path);
+		void	openStateSlot(std::string path);
+		void	saveStateSlot(std::string path);
 		void	gbDbSlot();
 		void	gbTypeSlot(htype hardware);
 		void	stepPressedSlot(unsigned int count);

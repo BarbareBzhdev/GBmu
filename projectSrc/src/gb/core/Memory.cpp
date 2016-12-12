@@ -380,3 +380,52 @@ void			Memory::write_word(uint16_t addr, uint16_t val, bool super)
 	this->write_byte(addr, (val & 0xFF), super);
 	this->write_byte(addr + 1, ((val & 0xFF00) >> 8), super);
 }
+
+void			Memory::saveState(std::fstream &out)
+{
+	out.write(reinterpret_cast<char*>(&_bios), sizeof(_bios));
+	out.write(reinterpret_cast<char*>(&_bcp), sizeof(_bcp));
+	out.write(reinterpret_cast<char*>(&_ocp), sizeof(_ocp));
+	out.write(reinterpret_cast<char*>(&_m_wram), sizeof(_m_wram));
+	out.write(reinterpret_cast<char*>(&_m_vram), sizeof(_m_vram));
+	out.write(reinterpret_cast<char*>(&_m_oam), sizeof(_m_oam));
+	out.write(reinterpret_cast<char*>(&_m_io), sizeof(_m_io));
+	out.write(reinterpret_cast<char*>(&_m_zp), sizeof(_m_zp));
+	out.write(reinterpret_cast<char*>(&_inBios), sizeof(_inBios));
+	out.write(reinterpret_cast<char*>(&_typeBios), sizeof(_typeBios));
+	out.write(reinterpret_cast<char*>(&_hdmaInProgress), sizeof(_hdmaInProgress));
+}
+
+void			Memory::loadState(std::fstream &out)
+{
+	std::cout << "Test dans Memory::loadState ..." << std::endl;
+	dprintf(1, "Lecture de sizeof(_m_wram) : %lu", sizeof(_m_wram));
+	out.read(reinterpret_cast<char*>(&_bios), sizeof(_bios));
+	out.read(reinterpret_cast<char*>(&_bcp), sizeof(_bcp));
+	out.read(reinterpret_cast<char*>(&_ocp), sizeof(_ocp));
+	unsigned long i = 0;
+	while (i < 8)
+	{
+		int b = 0;
+		while (b < 4096) {
+			dprintf(1, "%u ", _m_wram[i][b]);
+			++b;
+		}
+		std::cout << std::endl;
+		++i;
+	}
+	out.read(reinterpret_cast<char*>(&_m_wram), sizeof(_m_wram));
+	i = 0;
+	while (i < 8)
+	{
+		dprintf(1, "%u ", _m_wram[i][b]);
+		++i;
+	}
+	out.read(reinterpret_cast<char*>(&_m_vram), sizeof(_m_vram));
+	out.read(reinterpret_cast<char*>(&_m_oam), sizeof(_m_oam));
+	out.read(reinterpret_cast<char*>(&_m_io), sizeof(_m_io));
+	out.read(reinterpret_cast<char*>(&_m_zp), sizeof(_m_zp));
+	out.read(reinterpret_cast<char*>(&_inBios), sizeof(_inBios));
+	out.read(reinterpret_cast<char*>(&_typeBios), sizeof(_typeBios));
+	out.read(reinterpret_cast<char*>(&_hdmaInProgress), sizeof(_hdmaInProgress));
+}
