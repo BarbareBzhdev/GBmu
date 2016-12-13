@@ -662,7 +662,7 @@ class Cpu_z80
 	 */
 	public:
 		void							saveState(std::fstream &out);
-		void							loadState(std::fstream &out);
+		void							loadState(std::ifstream &out);
 
 	/*
 	 ** ################################################################

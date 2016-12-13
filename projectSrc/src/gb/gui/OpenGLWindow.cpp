@@ -182,14 +182,14 @@ void	OpenGLWindow::openSlot()
 }
 void	OpenGLWindow::openStateSlot()
 {
-	QString path = QFileDialog::getOpenFileName(NULL, tr("Open Save File"), "/home", tr("*.sgb, *.sgbc"));
+	QString path = QFileDialog::getOpenFileName(NULL, tr("Open Save File"), "/home", tr("*.sgb"));
 
 	emit openStateSign(path.toStdString());
 }
 
 void	OpenGLWindow::saveStateSlot()
 {
-	QString path = QFileDialog::getSaveFileName(NULL, tr("Save State File"), "/home", tr("*.sgb, *.sgbc"));
+	QString path = QFileDialog::getSaveFileName(NULL, tr("Save State File"), "/home", tr("*.sgb"));
 
 	emit saveStateSign(path.toStdString());
 }

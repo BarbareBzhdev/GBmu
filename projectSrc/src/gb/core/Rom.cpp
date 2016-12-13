@@ -607,3 +607,33 @@ void			Rom::updateRTC(void)
 		_RTCOldTime = _RTCCurrentTime;
 	}
 }
+
+//TODO save state _bank and _rambank
+//
+void		Rom::saveState(std::fstream &out)
+{
+	out.write(reinterpret_cast<char*>(&_hardware), sizeof(_hardware));
+	out.write(reinterpret_cast<char*>(&_bank), sizeof(_bank));
+	out.write(reinterpret_cast<char*>(&_rambank), sizeof(_rambank));
+	out.write(reinterpret_cast<char*>(&_tbank), sizeof(_tbank));
+	out.write(reinterpret_cast<char*>(&_write_protect), sizeof(_write_protect));
+	out.write(reinterpret_cast<char*>(&_mbc), sizeof(_mbc));
+	out.write(reinterpret_cast<char*>(&_RTCCurrentTime), sizeof(_RTCCurrentTime));
+	out.write(reinterpret_cast<char*>(&_RTCOldTime), sizeof(_RTCOldTime));
+	out.write(reinterpret_cast<char*>(&_isRTC), sizeof(_isRTC));
+	out.write(reinterpret_cast<char*>(_eram), this->getBankEram(this->_rom[RAMSIZE]) * 8192);
+}
+
+void		Rom::loadState(std::ifstream &out)
+{
+	out.read(reinterpret_cast<char*>(&_hardware), sizeof(_hardware));
+	out.read(reinterpret_cast<char*>(&_bank), sizeof(_bank));
+	out.read(reinterpret_cast<char*>(&_rambank), sizeof(_rambank));
+	out.read(reinterpret_cast<char*>(&_tbank), sizeof(_tbank));
+	out.read(reinterpret_cast<char*>(&_write_protect), sizeof(_write_protect));
+	out.read(reinterpret_cast<char*>(&_mbc), sizeof(_mbc));
+	out.read(reinterpret_cast<char*>(&_RTCCurrentTime), sizeof(_RTCCurrentTime));
+	out.read(reinterpret_cast<char*>(&_RTCOldTime), sizeof(_RTCOldTime));
+	out.read(reinterpret_cast<char*>(&_isRTC), sizeof(_isRTC));
+	out.read(reinterpret_cast<char*>(_eram), this->getBankEram(this->_rom[RAMSIZE]) * 8192);
+}

@@ -94,17 +94,26 @@ void Machine::saveState(const char *file)
 	_cpu->saveState(save);
 	_memory->saveState(save);
 	save.write(reinterpret_cast<char*>(&_cyclesAcc), sizeof(_cyclesAcc));
+	save.close();
 }
 
 void Machine::loadState(const char *file)
 {
-	std::cout << "On rentre dans loadState ..." << std::endl;
-	std::fstream					load;
+	if (!file)
+		return ;
+	std::ifstream					load;
 	load.open(file, std::ios::in | std::ios::ate | std::ios::binary);
 
-	_clock->loadState(load);
-	_gpu->loadState(load);
-	_cpu->loadState(load);
-	_memory->loadState(load);
-	load.write(reinterpret_cast<char*>(&_cyclesAcc), sizeof(_cyclesAcc));
+	if (load.is_open())
+	{
+		load.seekg(0, std::ios::beg);
+		_clock->loadState(load);
+		_gpu->loadState(load);
+		_cpu->loadState(load);
+		_memory->loadState(load);
+		load.read(reinterpret_cast<char*>(&_cyclesAcc), sizeof(_cyclesAcc));
+	}
+	else
+		std::cerr << "Cannot open file " << file << std::endl;
+	load.close();
 }

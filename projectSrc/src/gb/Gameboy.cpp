@@ -176,12 +176,18 @@ void	Gameboy::openRomSlot(std::string path)
 
 void	Gameboy::openStateSlot(std::string path)
 {
+	bool state = _stepMode.load();
+	_stepMode.store(true);
 	loadState(path.c_str());
+	_stepMode.store(state);
 }
 
 void	Gameboy::saveStateSlot(std::string path)
 {
+	bool state = _stepMode.load();
+	_stepMode.store(true);
 	saveState(path.c_str());
+	_stepMode.store(state);
 }
 
 void	Gameboy::gbDbSlot()

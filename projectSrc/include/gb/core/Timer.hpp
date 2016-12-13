@@ -44,7 +44,7 @@ class Timer
 		void						reset();
 		void						step(unsigned int cycles);
 		void						saveState(std::fstream &out);
-		void						loadState(std::fstream &out);
+		void						loadState(std::ifstream &out);
 	private:
 		std::array<uint32_t, 4>		_arrayFrequency {
 				{
@@ -53,7 +53,6 @@ class Timer
 				}};
 
 		Memory						*_memory;
-		unsigned int				_cycles;
 		unsigned int				_divider;
 		unsigned int				_cyclesAcc;
 };

@@ -7,7 +7,7 @@
 class Bios
 {
 	public:
-		const uint8_t		*load(htype hardware);
+		static const uint8_t		*load(htype hardware);
 
 		Bios(void);
 		~Bios(void);

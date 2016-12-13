@@ -82,7 +82,7 @@ void	Timer::saveState(std::fstream &out)
 	out.write(reinterpret_cast<char*>(&_divider), sizeof(_divider));
 }
 
-void	Timer::loadState(std::fstream &out)
+void	Timer::loadState(std::ifstream &out)
 {
 	out.read(reinterpret_cast<char*>(&_cyclesAcc), sizeof(_cyclesAcc));
 	out.read(reinterpret_cast<char*>(&_divider), sizeof(_divider));

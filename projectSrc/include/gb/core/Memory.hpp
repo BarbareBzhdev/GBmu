@@ -82,12 +82,11 @@ class Memory {
 		char				*romTitle(void);
 		bool				romIsLoaded(void);
 		void				saveState(std::fstream &out);
-		void				loadState(std::fstream &out);
+		void				loadState(std::ifstream &out);
 
 		std::array<uint8_t, 2>	key {{0x0f, 0x0f}};
 	private:
 		Rom					_rom;
-		Bios				_bios;
 		Audio				*_audio;
 		t_color15			_bcp[8][4]; // 8 Palettes ; 4 colors / palette
 		t_color15			_ocp[8][4]; // 8 Palettes ; 4 colors / palette
@@ -98,7 +97,7 @@ class Memory {
 		uint8_t				_m_zp[128];
 		bool				_inBios;
 		htype				_typeBios;
-		const uint8_t		*_codeBios;
+		const uint8_t				*_codeBios;
 
 		uint16_t			_hdmaInProgress;
 		Memory(void);

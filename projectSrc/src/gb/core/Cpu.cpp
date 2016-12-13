@@ -344,26 +344,47 @@ void Cpu_z80::_resetPtrAddr(void)
 
 void Cpu_z80::saveState(std::fstream &out)
 {
-	out.write(reinterpret_cast<char*>(&_stepState), sizeof(_stepState));
-	out.write(reinterpret_cast<char*>(&_halt), sizeof(_halt));
-	out.write(reinterpret_cast<char*>(&_stop), sizeof(_stop));
-	out.write(reinterpret_cast<char*>(&_IME), sizeof(_IME));
-	out.write(reinterpret_cast<char*>(&_holdIME), sizeof(_holdIME));
-	out.write(reinterpret_cast<char*>(&_spBeforeInterrupt), sizeof(_spBeforeInterrupt));
-	out.write(reinterpret_cast<char*>(&_opcodeInProgress), sizeof(_opcodeInProgress));
+	int stepState = static_cast<int>(_stepState);
+	int halt = static_cast<int>(_halt);
+	int stop = static_cast<int>(_stop);
+	int IME = static_cast<int>(_IME);
+	int holdIME = static_cast<int>(_holdIME);
+	int isSpeed = static_cast<int>(_isSpeed);
+
+	out.write(reinterpret_cast<char*>(&stepState), sizeof(int));
+	out.write(reinterpret_cast<char*>(&halt), sizeof(int));
+	out.write(reinterpret_cast<char*>(&stop), sizeof(int));
+	out.write(reinterpret_cast<char*>(&IME), sizeof(int));
+	out.write(reinterpret_cast<char*>(&holdIME), sizeof(int));
 	out.write(reinterpret_cast<char*>(&_cpuRegister), sizeof(_cpuRegister));
-	out.write(reinterpret_cast<char*>(&_isSpeed), sizeof(_isSpeed));
+	out.write(reinterpret_cast<char*>(&isSpeed), sizeof(int));
+	out.write(reinterpret_cast<char*>(&_spBeforeInterrupt), sizeof(_spBeforeInterrupt));
 }
 
-void Cpu_z80::loadState(std::fstream &out)
+void Cpu_z80::loadState(std::ifstream &out)
 {
-	out.read(reinterpret_cast<char*>(&_stepState), sizeof(_stepState));
-	out.read(reinterpret_cast<char*>(&_halt), sizeof(_halt));
-	out.read(reinterpret_cast<char*>(&_stop), sizeof(_stop));
-	out.read(reinterpret_cast<char*>(&_IME), sizeof(_IME));
-	out.read(reinterpret_cast<char*>(&_holdIME), sizeof(_holdIME));
-	out.read(reinterpret_cast<char*>(&_spBeforeInterrupt), sizeof(_spBeforeInterrupt));
-	out.read(reinterpret_cast<char*>(&_opcodeInProgress), sizeof(_opcodeInProgress));
+	int stepState = static_cast<int>(_stepState);
+	int halt = static_cast<int>(_halt);
+	int stop = static_cast<int>(_stop);
+	int IME = static_cast<int>(_IME);
+	int holdIME = static_cast<int>(_holdIME);
+	int isSpeed = static_cast<int>(_isSpeed);
+	out.read(reinterpret_cast<char*>(&stepState), sizeof(int));
+	out.read(reinterpret_cast<char*>(&halt), sizeof(int));
+	out.read(reinterpret_cast<char*>(&stop), sizeof(int));
+	out.read(reinterpret_cast<char*>(&IME), sizeof(int));
+	out.read(reinterpret_cast<char*>(&holdIME), sizeof(int));
 	out.read(reinterpret_cast<char*>(&_cpuRegister), sizeof(_cpuRegister));
-	out.read(reinterpret_cast<char*>(&_isSpeed), sizeof(_isSpeed));
+	out.read(reinterpret_cast<char*>(&isSpeed), sizeof(int));
+	out.read(reinterpret_cast<char*>(&_spBeforeInterrupt), sizeof(_spBeforeInterrupt));
+	if (_memory->read_byte(_cpuRegister.PC - 1) == 0xCB)
+		_opcodeInProgress = _getOpcode(_cpuRegister.PC - 1);
+	else
+		_opcodeInProgress = _getOpcode(_cpuRegister.PC);
+	_stepState = static_cast<bool>(stepState);
+	_halt = static_cast<bool>(halt);
+	_stop = static_cast<bool>(stop);
+	_IME = static_cast<bool>(IME);
+	_holdIME = static_cast<bool>(holdIME);
+	_isSpeed = static_cast<bool>(isSpeed);
 }

@@ -87,6 +87,12 @@ class Rom {
 		uint8_t							getBankEram(uint8_t octet);
 		char							*getTitle(void);
 		void							updateRTC(void);
+
+	public:
+		void							saveState(std::fstream &out);
+		void							loadState(std::ifstream &out);
+
+	private:
 		bool							_mbcRamAccess(void);
 		bool							_mbcTimerAccess(void);
 		bool							_checkHeader(void);
